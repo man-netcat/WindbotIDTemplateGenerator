@@ -25,11 +25,32 @@ def main():
 
     def clean(varStr): return re.sub('\W|^(?=\d)', '', varStr)
 
-    print()
+    print(f"""
+using System.Collections.Generic;
+using System.Linq;
+using WindBot;
+using WindBot.Game;
+using WindBot.Game.AI;
+using YGOSharp.OCGWrapper.Enums;
+
+namespace WindBot.Game.AI.Decks
+{{
+    [Deck("{executorname}", "AI_{executorname}")]
+    public class {executorname}Executor : DefaultExecutor
+    {{
+        public {executorname}Executor(GameAI ai, Duel duel) :
+            base(ai, duel)
+        {{
+""")
     for id in ids:
         cardname = df[df['Omega id'] == id]['name.1']
         namestring = cardname.to_string(index=False)
-        print(f"public const int {clean(namestring)} = {id};")
+        print(f"            public const int {clean(namestring)} = {id};")
+    print(f"""
+        }}
+    }}
+}}
+""")
 
 
 if __name__ == '__main__':
