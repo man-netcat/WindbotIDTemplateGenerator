@@ -2,6 +2,4 @@
 
 Generates a .cs executor template for windbot. https://github.com/IceYGO/windbot
 
-Currently only supports Rush Duel card ids.
-
-usage: `python3 templategen.py [deckname] [path/to/deck.ydk]`
+usage: Place `cards.cdb` next to this script, then run `python3 templategen.py [deckname] [path/to/deck.ydk]`
