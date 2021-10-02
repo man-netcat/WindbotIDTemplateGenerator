@@ -20,7 +20,10 @@ def ydk_to_idlist(ydkfile):
 
 
 def clean_cardname(cardname):
-    return re.sub('\W|^(?=\d)', '', cardname)
+    cardname = re.sub('\W|^(?=\d)', '', cardname)
+    if cardname[0].isdigit():
+        cardname = "_" + cardname
+    return cardname
 
 
 def main():
