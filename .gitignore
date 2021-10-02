@@ -128,5 +128,11 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# No deck files
 *.ydk
+
+# No card database
 cards.cdb
+
+# No output files
+*.cs
