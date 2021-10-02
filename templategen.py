@@ -46,7 +46,7 @@ def main():
     idlist = ydk_to_idlist(ydkfile)
 
     df = pd.read_sql_query(
-        f"SELECT * FROM texts WHERE id IN {tuple(idlist)}", con)
+        f"SELECT id, name FROM texts WHERE id IN {tuple(idlist)}", con)
     df = df.sort_values(by='name')
 
     with open(f"{executorname}Executor.cs", "w") as f:
