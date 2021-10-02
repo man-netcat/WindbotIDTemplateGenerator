@@ -30,10 +30,10 @@ def main():
     if len(sys.argv) != 3:
         print("usage: python3 templategen.py [executorname] [ydk path]")
         exit(1)
-        
+
     executorname = sys.argv[1]
     ydkfile = sys.argv[2]
-    
+
     if not os.path.exists(ydkfile):
         print("YDK file not found.")
         exit(1)
@@ -41,7 +41,6 @@ def main():
     if not os.path.exists('./cards.cdb'):
         print("Put cards.cdb next to this script.")
         exit(1)
-
 
     con = sqlite3.connect('cards.cdb')
     idlist = ydk_to_idlist(ydkfile)
