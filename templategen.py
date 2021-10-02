@@ -11,7 +11,7 @@ def ydk_to_idlist(ydkfile):
 
     with open(ydkfile, "r") as f:
         for line in f.readlines():
-            if line == "!side":
+            if "!side" in line:
                 break
             if line.strip().isdigit():
                 idlist.add(int(line.strip()))
@@ -50,7 +50,6 @@ def main():
     df = df.sort_values(by='name')
 
     with open(f"{executorname}Executor.cs", "w") as f:
-
         f.write(f"""
 using System.Collections.Generic;
 using System.Linq;
