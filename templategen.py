@@ -42,7 +42,9 @@ def main():
         f"SELECT * FROM texts WHERE id IN {tuple(idlist)}", con)
     df = df.sort_values(by='name')
 
-    print(f"""
+    with open(f"{executorname}Executor.cs", "w") as f:
+
+        f.write(f"""
 using System.Collections.Generic;
 using System.Linq;
 using WindBot;
@@ -57,10 +59,10 @@ namespace WindBot.Game.AI.Decks
     {{
         public class CardId
         {{""")
-    for _, card in df.iterrows():
-        print(
-            f"            public const int {clean_cardname(card['name'])} = {card['id']};")
-    print(f"""        }}
+        for _, card in df.iterrows():
+            f.write(
+                f"            public const int {clean_cardname(card['name'])} = {card['id']};")
+        f.write(f"""        }}
         public {executorname}Executor(GameAI ai, Duel duel) :
             base(ai, duel)
         {{            
