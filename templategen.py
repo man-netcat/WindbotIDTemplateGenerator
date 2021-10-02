@@ -1,7 +1,26 @@
-import pandas as pd
+import os
 import re
-import sys
 import sqlite3
+import sys
+
+import pandas as pd
+
+
+def ydk_to_idlist(ydkfile):
+    idlist = set()
+
+    with open(ydkfile, "r") as f:
+        for line in f.readlines():
+            if line == "!side":
+                break
+            if line.strip().isdigit():
+                idlist.add(int(line.strip()))
+
+    return idlist
+
+
+def clean_cardname(cardname):
+    return re.sub('\W|^(?=\d)', '', cardname)
 
 
 def main():
@@ -9,23 +28,19 @@ def main():
         print("usage: python3 templategen.py [executorname] [ydk path]")
         exit(1)
 
+    if not os.path.exists('./cards.cdb'):
+        print("Put cards.cdb next to this script.")
+        exit(1)
+
     executorname = sys.argv[1]
     ydkfile = sys.argv[2]
-    con = sqlite3.connect('cards.cdb')
 
-    ids = set()
-    with open(ydkfile, "r") as f:
-        for line in f.readlines():
-            if line == "!side":
-                break
-            if line.strip().isdigit():
-                ids.add(int(line.strip()))
+    con = sqlite3.connect('cards.cdb')
+    idlist = ydk_to_idlist(ydkfile)
 
     df = pd.read_sql_query(
-        f"SELECT * FROM texts WHERE id IN {tuple(ids)}", con)
+        f"SELECT * FROM texts WHERE id IN {tuple(idlist)}", con)
     df = df.sort_values(by='name')
-
-    def clean(varStr): return re.sub('\W|^(?=\d)', '', varStr)
 
     print(f"""
 using System.Collections.Generic;
@@ -42,9 +57,9 @@ namespace WindBot.Game.AI.Decks
     {{
         public class CardId
         {{""")
-    for index, row in df.iterrows():
+    for _, card in df.iterrows():
         print(
-            f"            public const int {clean(row['name'])} = {row['id']};")
+            f"            public const int {clean_cardname(card['name'])} = {card['id']};")
     print(f"""        }}
         public {executorname}Executor(GameAI ai, Duel duel) :
             base(ai, duel)
